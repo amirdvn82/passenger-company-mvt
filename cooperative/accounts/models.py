@@ -29,3 +29,16 @@ class DriverProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - Driver"
+
+class Vehicle(models.Model):
+
+    driver = models.ForeignKey(DriverProfile, on_delete=models.CASCADE, related_name="vehicles")
+
+    plate_number = models.CharField(max_length=15, unique=True)
+    car_model = models.CharField(max_length=50)
+    capacity = models.PositiveIntegerField()
+
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.car_model} - {self.plate_number}"
