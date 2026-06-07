@@ -13,11 +13,17 @@ class Ticket(models.Model):
 
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name="tickets")
 
-    seat_count = models.PositiveIntegerField(default=1)
+    seat_number = models.PositiveIntegerField()
 
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.RESERVED)
 
     created_date = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+
+        unique_together = ("trip", "seat_number")
+
     def __str__(self):
+
         return f"{self.user} - {self.trip}"
+
