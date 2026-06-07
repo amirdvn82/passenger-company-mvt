@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'cities',
     'trips',
     'tickets',
+    'wallets',
 ]
 
 MIDDLEWARE = [
