@@ -2,6 +2,7 @@ from django.db import models
 from accounts.models import DriverProfile, Vehicle
 from cities.models import City
 from django.db.models import Sum
+from cities.services import calculate_trip_price, calculate_travel_time_minutes
 
 
 class Trip(models.Model):
@@ -23,12 +24,35 @@ class Trip(models.Model):
 
     capacity = models.PositiveIntegerField()
 
-    price = models.PositiveIntegerField()
+    price = models.PositiveIntegerField(blank=True, null=True)
+
+    travel_time_minutes = models.PositiveIntegerField(blank=True, null=True)
 
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
 
     created_date = models.DateTimeField(auto_now_add=True)
 
+
+
+    def save(self, *args, **kwargs):
+
+        if self.origin == self.destination:
+            raise ValueError("Origin and destination cannot be the same")
+
+        if self.capacity > self.vehicle.capacity:
+            raise ValueError("Trip capacity cannot exceed vehicle capacity")
+
+        if self.origin and self.destination:
+
+            if not self.price:
+                self.price = calculate_trip_price(self.origin, self.destination)
+
+            if not self.travel_time_minutes:
+                self.travel_time_minutes = calculate_travel_time_minutes(self.origin, self.destination)
+
+        super().save(*args, **kwargs)
+
+    
     def __str__(self):
         return f'{self.origin} → {self.destination}'
 
