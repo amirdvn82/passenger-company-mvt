@@ -1,6 +1,7 @@
 from django.db import models
 from accounts.models import DriverProfile, Vehicle
 from cities.models import City
+from django.db.models import Sum
 
 
 class Trip(models.Model):
@@ -30,3 +31,11 @@ class Trip(models.Model):
 
     def __str__(self):
         return f'{self.origin} → {self.destination}'
+
+
+    def reserved_seats(self):
+        result = self.tickets.aggregate(total=Sum("seat_count"))
+        return result["total"] or 0
+
+    def remaining_capacity(self):
+        return self.capacity - self.reserved_seats()
