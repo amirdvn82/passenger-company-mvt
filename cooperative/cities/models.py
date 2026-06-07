@@ -19,5 +19,9 @@ class CityDistance(models.Model):
 
     base_time_minutes = models.PositiveIntegerField()
 
+
+    class Meta:
+        unique_together = ("origin", "destination")
+    
     def __str__(self):
         return f"{self.origin} → {self.destination}"
