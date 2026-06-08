@@ -1,6 +1,8 @@
 from django.urls import path
-from .views import buy_ticket_view
+from .views import *
 
 urlpatterns = [
     path("buy/", buy_ticket_view, name="buy_ticket"),
+    path("success/", ticket_success_view, name="ticket_success"),
+
 ]

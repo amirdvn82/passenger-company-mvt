@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket System</title>
+</head>
+<body>
+
+<nav>
+    <a href="{% url 'trip_list' %}">Trips</a> |
+    <a href="{% url 'my_tickets' %}">My Tickets</a> |
+    <a href="{% url 'password_change' %}">Change Password</a>
+</nav>
+
+<hr>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>

@@ -28,3 +28,7 @@ def buy_ticket_view(request):
         form = BuyTicketForm()
 
     return render(request, "tickets/buy_ticket.html", {"form": form})
+
+@login_required
+def ticket_success_view(request):
+    return render(request, "tickets/success.html")
