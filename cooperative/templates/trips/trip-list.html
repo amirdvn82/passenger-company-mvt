@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trips</title>
+</head>
+<body>
+
+<h2>Available Trips</h2>
+
+{% for trip in trips %}
+<div style="margin-bottom:20px">
+
+    <p>
+        {{ trip.origin }}  {{ trip.destination }}
+    </p>
+
+    <p>
+        Price: {{ trip.price }}
+    </p>
+
+    <p>
+        Capacity: {{ trip.capacity }}
+    </p>
+
+    <a href="/tickets/buy/?trip_id={{ trip.id }}">
+        Buy Ticket
+    </a>
+
+</div>
+{% endfor %}
+
+</body>
+</html>

@@ -19,7 +19,7 @@ def buy_ticket_view(request):
 
             try:
                 ticket = TicketService.buy_ticket(user=request.user, trip=trip, seat_number=seat_number)
-                return redirect("ticket_success")
+                return redirect("ticket-success")
 
             except TicketPurchaseError as e:
                 form.add_error(None, str(e))
@@ -27,7 +27,7 @@ def buy_ticket_view(request):
     else:
         form = BuyTicketForm()
 
-    return render(request, "tickets/buy_ticket.html", {"form": form})
+    return render(request, "tickets/buy-ticket.html", {"form": form})
 
 @login_required
 def ticket_success_view(request):
