@@ -41,7 +41,9 @@ class Trip(models.Model):
         if self.capacity > self.vehicle.capacity:
             raise ValueError("Trip capacity cannot exceed vehicle capacity")
 
-        if self.origin and self.destination:
+        if self.origin_id and self.destination_id:
+            if self.origin_id == self.destination_id:
+                raise ValueError("Origin and destination cannot be the same")
 
             if self.price is None:
                 self.price = calculate_trip_price(self.origin, self.destination)
@@ -59,6 +61,8 @@ class Trip(models.Model):
     def reserved_seats(self):
         Ticket = apps.get_model('tickets', 'Ticket') 
         return self.tickets.filter(status=Ticket.Status.RESERVED).count()
-
+    
+    
+    @property
     def remaining_capacity(self):
         return self.capacity - self.reserved_seats()
