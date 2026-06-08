@@ -1,9 +1,8 @@
 from django.db import models
 from accounts.models import DriverProfile, Vehicle
 from cities.models import City
-from django.db.models import Sum
 from cities.services import calculate_trip_price, calculate_travel_time_minutes
-
+from django.apps import apps   
 
 class Trip(models.Model):
 
@@ -44,10 +43,10 @@ class Trip(models.Model):
 
         if self.origin and self.destination:
 
-            if not self.price:
+            if self.price is None:
                 self.price = calculate_trip_price(self.origin, self.destination)
 
-            if not self.travel_time_minutes:
+            if self.travel_time_minutes is None:
                 self.travel_time_minutes = calculate_travel_time_minutes(self.origin, self.destination)
 
         super().save(*args, **kwargs)
@@ -58,8 +57,8 @@ class Trip(models.Model):
 
 
     def reserved_seats(self):
-        result = self.tickets.aggregate(total=Sum("seat_count"))
-        return result["total"] or 0
+        Ticket = apps.get_model('tickets', 'Ticket') 
+        return self.tickets.filter(status=Ticket.Status.RESERVED).count()
 
     def remaining_capacity(self):
         return self.capacity - self.reserved_seats()

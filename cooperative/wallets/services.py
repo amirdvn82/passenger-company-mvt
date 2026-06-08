@@ -1,7 +1,8 @@
+# cooperative/wallets/services.py
+
 from decimal import Decimal
-
 from django.db import transaction
-
+from django.db.models import F
 from .models import Wallet, WalletTransaction
 
 
@@ -14,37 +15,58 @@ class WalletService:
     @staticmethod
     @transaction.atomic
     def deposit(user, amount: Decimal, description: str = ""):
+        """
+        Increase user's wallet balance.
+        """
+
+        amount = Decimal(amount)
 
         if amount <= 0:
-            raise ValueError("Deposit amount must be positive")
+            return  # هیچ کاری نکن
 
         wallet, _ = Wallet.objects.select_for_update().get_or_create(user=user)
 
-        wallet.balance += amount
-
+        wallet.balance = F("balance") + amount
         wallet.save(update_fields=["balance"])
+        wallet.refresh_from_db()
 
         WalletTransaction.objects.create(
-            wallet=wallet, amount=amount, transaction_type=WalletTransaction.TransactionType.DEPOSIT, description=description)
+            wallet=wallet,
+            amount=amount,
+            transaction_type=WalletTransaction.TransactionType.DEPOSIT,
+            description=description,
+        )
 
         return wallet.balance
 
     @staticmethod
     @transaction.atomic
     def withdraw(user, amount: Decimal, description: str = ""):
+        """
+        Decrease user's wallet balance safely.
+        """
 
+        amount = Decimal(amount)
+
+        # ✅ اگر مبلغ صفر یا منفی بود هیچ کاری نکن
         if amount <= 0:
-            raise ValueError("Withdraw amount must be positive")
+            return
 
         wallet, _ = Wallet.objects.select_for_update().get_or_create(user=user)
 
+        # ✅ جلوگیری از منفی شدن موجودی
         if wallet.balance < amount:
             raise InsufficientBalanceError("Insufficient balance")
 
-        wallet.balance -= amount
-
+        wallet.balance = F("balance") - amount
         wallet.save(update_fields=["balance"])
+        wallet.refresh_from_db()
 
-        WalletTransaction.objects.create(wallet=wallet, amount=amount, transaction_type=WalletTransaction.TransactionType.WITHDRAW, description=description)
+        WalletTransaction.objects.create(
+            wallet=wallet,
+            amount=amount,
+            transaction_type=WalletTransaction.TransactionType.WITHDRAW,
+            description=description,
+        )
 
         return wallet.balance

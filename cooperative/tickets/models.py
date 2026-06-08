@@ -11,7 +11,7 @@ class Ticket(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tickets")
 
-    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, related_name="tickets")
+    trip = models.ForeignKey('trips.Trip', on_delete=models.CASCADE, related_name="tickets")
 
     seat_number = models.PositiveIntegerField()
 
