@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+    {% block content %}
+    <div class="container mt-4">
+        <h2> My Ticket</h2>
+        {% if tickets %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Trip</th>
+                    <th>Date Of Departure</th>
+                    <th> Seat Number</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ticket in tickets %}
+                <tr>
+                    <td>{{ ticket.trip.destination }}</td>
+                    <td>{{ ticket.trip.departure_time }}</td>
+                    <td>{{ ticket.seat_number }}</td>
+                    <td>{{ ticket.trip.price }} $</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>You ave not purchased any tickets.</p>
+        {% endif %}
+    </div>
+    {% endblock %}

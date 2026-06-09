@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>My Trips</h2>
+
+{% for trip in trips %}
+
+<p>
+    {{ trip.origin }}
+    →
+    {{ trip.destination }}
+</p>
+
+<p>
+    Price: {{ trip.price }}
+</p>
+
+<p>
+    Capacity: {{ trip.capacity }}
+</p>
+
+<p>
+    Remaining: {{ trip.remaining_capacity }}
+</p>
+
+<p>
+    Sold Seats: {{ trip.sold_seats }}
+</p>
+
+<p>
+    Revenue: {{ trip.revenue }}
+</p>
+
+<hr>
+
+{% empty %}
+
+<p>No trips found.</p>
+
+{% endfor %}
+
+{% endblock %}
