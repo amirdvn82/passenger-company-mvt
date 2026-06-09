@@ -1,34 +1,44 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from .forms import BuyTicketForm
 from .services import TicketService, TicketPurchaseError
 from trips.models import Trip
+from .models import Ticket
 
 
 @login_required
-def buy_ticket_view(request):
-
+def buy_ticket_view(request, trip_id):
+   
+    trip = get_object_or_404(Trip, id=trip_id)
+   
     if request.method == "POST":
         form = BuyTicketForm(request.POST)
 
         if form.is_valid():
-            trip_id = form.cleaned_data["trip_id"]
+            #trip_id = form.cleaned_data["trip_id"]
             seat_number = form.cleaned_data["seat_number"]
 
-            trip = Trip.objects.get(id=trip_id)
+            #trip = Trip.objects.get(id=trip_id)
 
             try:
-                ticket = TicketService.buy_ticket(user=request.user, trip=trip, seat_number=seat_number)
+                TicketService.buy_ticket(user=request.user, trip=trip, seat_number=seat_number)
                 return redirect("ticket-success")
 
             except TicketPurchaseError as e:
                 form.add_error(None, str(e))
 
     else:
-        form = BuyTicketForm()
+        form = BuyTicketForm(initial={"trip_id": trip_id})
 
-    return render(request, "tickets/buy-ticket.html", {"form": form})
+    return render(request, "tickets/buy-ticket.html", {"form": form, "trip": trip})
 
 @login_required
 def ticket_success_view(request):
     return render(request, "tickets/success.html")
+
+
+@login_required
+def my_tickets_view(request):
+    
+    tickets = Ticket.objects.filter(user=request.user).select_related('trip')
+    return render(request, 'tickets/my-tickets.html', {'tickets': tickets})
