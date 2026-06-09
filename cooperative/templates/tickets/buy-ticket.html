@@ -1,33 +1,24 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Buy Ticket</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block content %}
 
 <h2>Buy Ticket</h2>
-
+<!--
 {% if form.non_field_errors %}
 <div style="color:red;">
     {{ form.non_field_errors }}
 </div>
 {% endif %}
-
+-->
 <form method="post">
     {% csrf_token %}
-    
-    <p>
-        {{ form.trip_id.label_tag }}
-        {{ form.trip_id }}
-    </p>
 
-    <p>
-        {{ form.seat_number.label_tag }}
-        {{ form.seat_number }}
-    </p>
+    {{ form.as_p }}
 
-    <button type="submit">Buy Ticket</button>
+    <button type="submit">
+        Buy Ticket
+    </button>
+
 </form>
 
-</body>
-</html>
+{% endblock %}
