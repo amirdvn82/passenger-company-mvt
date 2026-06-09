@@ -66,3 +66,12 @@ class Trip(models.Model):
     @property
     def remaining_capacity(self):
         return self.capacity - self.reserved_seats()
+    
+    @property
+    def sold_seats(self):
+        return self.reserved_seats()
+    
+    @property
+    def revenue(self):
+
+        return self.sold_seats * self.price
