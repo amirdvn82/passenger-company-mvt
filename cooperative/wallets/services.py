@@ -1,5 +1,3 @@
-# cooperative/wallets/services.py
-
 from decimal import Decimal
 from django.db import transaction
 from django.db.models import F
@@ -22,7 +20,7 @@ class WalletService:
         amount = Decimal(amount)
 
         if amount <= 0:
-            return  # هیچ کاری نکن
+            return 
 
         wallet, _ = Wallet.objects.select_for_update().get_or_create(user=user)
 
@@ -69,4 +67,20 @@ class WalletService:
             description=description,
         )
 
+        return wallet.balance
+    
+    @staticmethod
+    @transaction.atomic
+    def refund(user, amount: Decimal, description: str = ""):
+        if amount <= 0:
+            raise ValueError("Refund amount must be positive")
+        wallet, _ = Wallet.objects.select_for_update().get_or_create(user=user)
+        wallet.balance += amount
+        wallet.save(update_fields=["balance"])
+        WalletTransaction.objects.create(
+            wallet=wallet,
+            amount=amount,
+            transaction_type=WalletTransaction.TransactionType.REFUND,
+            description=description
+        )
         return wallet.balance

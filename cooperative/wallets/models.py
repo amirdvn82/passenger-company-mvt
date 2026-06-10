@@ -18,7 +18,7 @@ class WalletTransaction(models.Model):
     class TransactionType(models.TextChoices):
         DEPOSIT = 'DEPOSIT', 'Deposit'
         WITHDRAW = 'WITHDRAW', 'Withdraw'
-
+        REFUND = 'REFUND', 'Refund'
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='transactions')
 
     amount = models.DecimalField(max_digits=12, decimal_places=0)
@@ -27,6 +27,8 @@ class WalletTransaction(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     description = models.CharField(max_length=255, blank=True)
+
+    
 
     def __str__(self):
         return f"{self.wallet.user.username} - {self.get_transaction_type_display()} - {self.amount}"
