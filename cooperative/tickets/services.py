@@ -1,4 +1,4 @@
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from wallets.services import WalletService, InsufficientBalanceError
 from .models import Ticket
 from trips.models import Trip
@@ -20,7 +20,7 @@ class TicketService:
         if seat_number < 1 or seat_number > trip.capacity:
             raise TicketPurchaseError("Invalid seat number")
 
-        if trip.tickets.count() >= trip.capacity:
+        if trip.tickets.filter(status=Ticket.Status.ACTIVE).count() >= trip.capacity:
             raise TicketPurchaseError("Trip is full")
 
         if Ticket.objects.filter(trip=trip, seat_number=seat_number, status=Ticket.Status.ACTIVE,).exists():
@@ -33,13 +33,20 @@ class TicketService:
 
         if price > 0:
             try:
-                WalletService.withdraw(
-                    user=user,
-                    amount=price,
-                    description=f"Ticket purchase for trip #{trip.id}"
-                )
+                
+                WalletService.withdraw(user=user, amount=price, description=f"Ticket purchase for trip #{trip.id}")
+            
             except InsufficientBalanceError:
+                
                 raise TicketPurchaseError("Insufficient balance")
+            
+            try:
+                
+                ticket = Ticket.objects.create(user=user, trip=trip, seat_number=seat_number, status=Ticket.Status.ACTIVE)
+            
+            except IntegrityError:
+                
+                raise TicketPurchaseError("Seat already reserved")
 
         ticket = Ticket.objects.create(user=user, trip=trip, seat_number=seat_number, status=Ticket.Status.ACTIVE)
 

@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 from trips.models import Trip
-
+from django.db.models import Q
 
 class Ticket(models.Model):
 
@@ -22,8 +22,10 @@ class Ticket(models.Model):
 
 
     class Meta:
+        constraints = [
+        models.UniqueConstraint(fields=["trip", "seat_number"], condition=Q(status="ACTIVE"), name="unique_active_seat_per_trip")
+]
 
-        unique_together = ("trip", "seat_number")
 
     def __str__(self):
 
