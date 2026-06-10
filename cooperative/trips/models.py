@@ -3,6 +3,9 @@ from accounts.models import DriverProfile, Vehicle
 from cities.models import City
 from cities.services import calculate_trip_price, calculate_travel_time_minutes
 from django.apps import apps   
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+
 
 class Trip(models.Model):
 
@@ -75,3 +78,12 @@ class Trip(models.Model):
     def revenue(self):
 
         return self.sold_seats * self.price
+    
+    def create_trip_permissions():
+        content_type = ContentType.objects.get_for_model(Trip)
+        #Permission to view driver dashboard
+        Permission.objects.get_or_create(codename='view_driver_dashboard', name='Can view driver dashboard', content_type=content_type)
+        #Permission to manage trips by admin
+        Permission.objects.get_or_create(codename='manage_trip', name='Can manage trips', content_type=content_type)
+        #Other permissions for regular user trips
+        Permission.objects.get_or_create(codename='view_trip', name='Can view trips', content_type=content_type)
