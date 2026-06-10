@@ -6,8 +6,9 @@ from trips.models import Trip
 class Ticket(models.Model):
 
     class Status(models.TextChoices):
-        RESERVED = "RESERVED", "Reserved"
+        ACTIVE = "ACTIVE", "Active"
         CANCELLED = "CANCELLED", "Cancelled"
+        USED = "USED", "Used"
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tickets")
 
@@ -15,9 +16,10 @@ class Ticket(models.Model):
 
     seat_number = models.PositiveIntegerField()
 
-    status = models.CharField(max_length=20, choices=Status.choices, default=Status.RESERVED)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE)
 
     created_date = models.DateTimeField(auto_now_add=True)
+
 
     class Meta:
 

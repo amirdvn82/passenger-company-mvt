@@ -88,7 +88,7 @@ class TicketServiceTests(TestCase):
         self.assertEqual(self.user.wallet.balance, expected_balance)
         self.assertIsNotNone(ticket.id)
         self.assertEqual(ticket.seat_number, 5)
-        self.assertEqual(ticket.status, Ticket.Status.RESERVED)
+        self.assertEqual(ticket.status, Ticket.Status.ACTIVE)
     
     # تست سفر تأیید نشده
     def test_trip_not_approved(self):

@@ -23,8 +23,11 @@ class TicketService:
         if trip.tickets.count() >= trip.capacity:
             raise TicketPurchaseError("Trip is full")
 
-        if Ticket.objects.filter(trip=trip, seat_number=seat_number).exists():
+        if Ticket.objects.filter(trip=trip, seat_number=seat_number, status=Ticket.Status.ACTIVE,).exists():
             raise TicketPurchaseError("Seat already reserved")
+
+        if Ticket.objects.filter(user=user, trip=trip, status=Ticket.Status.ACTIVE,).exists():
+            raise TicketPurchaseError("You already have a ticket for this trip")
 
         price = trip.price
 
@@ -38,11 +41,6 @@ class TicketService:
             except InsufficientBalanceError:
                 raise TicketPurchaseError("Insufficient balance")
 
-        ticket = Ticket.objects.create(
-            user=user,
-            trip=trip,
-            seat_number=seat_number,
-            status=Ticket.Status.RESERVED
-        )
+        ticket = Ticket.objects.create(user=user, trip=trip, seat_number=seat_number, status=Ticket.Status.ACTIVE)
 
         return ticket
