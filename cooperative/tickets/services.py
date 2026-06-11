@@ -48,6 +48,5 @@ class TicketService:
                 
                 raise TicketPurchaseError("Seat already reserved")
 
-        ticket = Ticket.objects.create(user=user, trip=trip, seat_number=seat_number, status=Ticket.Status.ACTIVE)
-
+       
         return ticket

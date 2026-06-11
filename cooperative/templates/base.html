@@ -6,12 +6,12 @@
 <body>
 
 <nav>
-    <a href="{% url 'trip-list' %}">Trips</a> |
-    <a href="{% url 'my-tickets' %}">My Tickets</a> 
-    <a href="{% url 'signup' %}">Sign Up</a>|
+    <a href="{% url 'trips:trip-list' %}">Trips</a> |
+    <a href="{% url 'tickets:my-tickets' %}">My Tickets</a> 
+    <a href="{% url 'accounts:signup' %}">Sign Up</a>|
     <a href="{% url 'login' %}">Login</a>|
     <a href="{% url 'password-change' %}">Change Password</a>
-    <a href="{% url 'driver-dashboard' %}">Driver Dashboard</a>
+    <a href="{% url 'trips:driver-dashboard' %}">Driver Dashboard</a>
 </nav>
 
 <hr>

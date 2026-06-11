@@ -31,8 +31,8 @@ class Migration(migrations.Migration):
                 (
                     "status",
                     models.CharField(
-                        choices=[("ACTIVE", "Reserved"), ("CANCELLED", "Cancelled")],
-                        default="RESERVED",
+                        choices=[("ACTIVE", "Active"), ("CANCELLED", "Cancelled")],
+                        default="ACTIVE",
                         max_length=20,
                     ),
                 ),

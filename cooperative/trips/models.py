@@ -63,7 +63,7 @@ class Trip(models.Model):
 
     def reserved_seats(self):
         Ticket = apps.get_model('tickets', 'Ticket') 
-        return self.tickets.filter(status=Ticket.Status.RESERVED).count()
+        return self.tickets.filter(status=Ticket.Status.ACTIVE).count()
     
     
     @property

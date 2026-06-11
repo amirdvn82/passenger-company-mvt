@@ -4,10 +4,9 @@
 <h2>Available Trips</h2>
 
 {% for trip in trips %}
-<div style="margin-bottom:20px">
-
+<div style="margin-bottom:20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
     <p>
-        {{ trip.origin }} ==> {{ trip.destination }}
+        <strong>{{ trip.origin }}</strong> ==> <strong>{{ trip.destination }}</strong>
     </p>
 
     <p>
@@ -16,19 +15,15 @@
 
     <p>
         {% if trip.remaining_capacity > 0 %}
-        <a href="{% url 'buy-ticket' trip.id %}" ...>Buy Ticket</a>
+        <span style="color: green;">Capacity: {{ trip.remaining_capacity }}</span><br><br>
+        <a href="{% url 'tickets:buy-ticket' trip.id %}"
+            style="padding: 8px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+            Buy Ticket
+        </a>
         {% else %}
-        <span style="color: red;">Sold Out</span>
+        <span style="color: red; font-weight: bold;">Sold Out</span>
         {% endif %}
-
     </p>
-
-    <a href="{% url 'buy-ticket' trip.id %}"
-        style="padding: 5px 10px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
-        Buy Ticket
-    </a>
-
-
 </div>
 {% endfor %}
 
