@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -6,12 +7,27 @@
 <body>
 
 <nav>
-    <a href="{% url 'trips:trip-list' %}">Trips</a> |
-    <a href="{% url 'tickets:my-tickets' %}">My Tickets</a> 
-    <a href="{% url 'accounts:signup' %}">Sign Up</a>|
-    <a href="{% url 'login' %}">Login</a>|
-    <a href="{% url 'password-change' %}">Change Password</a>
-    <a href="{% url 'trips:driver-dashboard' %}">Driver Dashboard</a>
+    {% if user.is_authenticated %}
+        <a href="{% url 'trips:trip-list' %}">Trips</a> |
+        <a href="{% url 'tickets:my-tickets' %}">My Tickets</a> |
+
+        {% if user.role == 'DRIVER' or user.is_staff %}
+            <a href="{% url 'trips:driver-dashboard' %}">Driver Dashboard</a> |
+        {% endif %}
+
+        <a href="{% url 'password-change' %}">Change Password</a> |
+
+        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+
+        <span> (Logged in as {{ user.username }})</span>
+    {% else %}
+        <a href="{% url 'trips:trip-list' %}">Trips</a> |
+        <a href="{% url 'accounts:signup' %}">Sign Up</a> |
+        <a href="{% url 'login' %}">Login</a>
+    {% endif %}
 </nav>
 
 <hr>
