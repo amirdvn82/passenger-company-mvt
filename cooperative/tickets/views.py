@@ -4,6 +4,8 @@ from .forms import BuyTicketForm
 from .services import TicketService, TicketPurchaseError
 from trips.models import Trip
 from .models import Ticket
+from django.utils import timezone
+from django.contrib import messages
 
 
 @login_required
@@ -40,5 +42,16 @@ def ticket_success_view(request):
 @login_required
 def my_tickets_view(request):
     
-    tickets = Ticket.objects.filter(user=request.user).select_related('trip')
-    return render(request, 'tickets/my-tickets.html', {'tickets': tickets})
+    tickets = Ticket.objects.filter(user=request.user).select_related('trip', 'trip__origin', 'trip__destination').order_by('-created_date')
+    now = timezone.now()
+    return render(request, 'tickets/my-tickets.html', {'tickets': tickets, 'now': now})
+
+@login_required
+def cancel_ticket_view(request, ticket_id):
+    if request.method == 'POST':
+        try:
+            TicketService.cancel_ticket(ticket_id=ticket_id, user=request.user)
+            messages.success(request, 'The ticket has been successfully cancelled and the funds have been returned to your wallet.')
+        except (ValueError, PermissionError, TicketPurchaseError) as e:
+            messages.error(request, str(e))
+    return redirect('tickets:my-tickets')

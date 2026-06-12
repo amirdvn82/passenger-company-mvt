@@ -1,31 +1,59 @@
 {% extends 'base.html' %}
 
-    {% block content %}
-    <div class="container mt-4">
-        <h2> My Ticket</h2>
-        {% if tickets %}
-        <table class="table">
+{% block content %}
+<div class="container mt-4">
+    <h2>My Tickets</h2>
+
+    {% if tickets %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
             <thead>
                 <tr>
                     <th>Trip</th>
-                    <th>Date Of Departure</th>
-                    <th> Seat Number</th>
-                    <th>Price</th>
+                    <th>Seat Number</th>
+                    <th>Purchase Date</th>
+                    <th>Status</th>
+                    <th>Departure Time</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 {% for ticket in tickets %}
                 <tr>
-                    <td>{{ ticket.trip.destination }}</td>
-                    <td>{{ ticket.trip.departure_time }}</td>
+                    <td>{{ ticket.trip.origin.name }} → {{ ticket.trip.destination.name }}</td>
                     <td>{{ ticket.seat_number }}</td>
-                    <td>{{ ticket.trip.price }} $</td>
+                    <td>{{ ticket.created_date|date:"Y/m/d H:i" }}</td>
+                    <td>
+                        {% if ticket.status == 'ACTIVE' %}
+                        <span class="badge bg-success">Active</span>
+                        {% elif ticket.status == 'CANCELLED' %}
+                        <span class="badge bg-danger">Cancelled</span>
+                        {% elif ticket.status == 'USED' %}
+                        <span class="badge bg-secondary">Used</span>
+                        {% else %}
+                        {{ ticket.status }}
+                        {% endif %}
+                    </td>
+                    <td>{{ ticket.trip.departure_time|date:"Y/m/d H:i" }}</td>
+                    <td>
+                        {% if ticket.status == 'ACTIVE' and ticket.trip.departure_time > now %}
+                        <form method="post" action="{% url 'tickets:cancel_ticket' ticket.id %}"
+                            style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Are you sure?')">Cancel Ticket</button>
+                        </form>
+                        {% else %}
+                        <span class="text-muted">Not cancellable</span>
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        {% else %}
-        <p>You ave not purchased any tickets.</p>
-        {% endif %}
     </div>
-    {% endblock %}
+    {% else %}
+    <div class="alert alert-info">You have no tickets.</div>
+    {% endif %}
+</div>
+{% endblock %}
