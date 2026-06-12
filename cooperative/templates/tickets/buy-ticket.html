@@ -1,24 +1,18 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
+<h1>Buy Ticket</h1>
 
-<h2>Buy Ticket</h2>
-<!--
 {% if form.non_field_errors %}
 <div style="color:red;">
     {{ form.non_field_errors }}
 </div>
 {% endif %}
--->
+
 <form method="post">
     {% csrf_token %}
-
     {{ form.as_p }}
-
-    <button type="submit">
-        Buy Ticket
-    </button>
-
+    <button type="submit">Buy Ticket</button>
 </form>
 
 {% endblock %}

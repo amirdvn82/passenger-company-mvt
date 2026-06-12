@@ -1,6 +1,11 @@
 from django import forms
+from .models import Ticket
 
-class BuyTicketForm(forms.Form):
-    trip_id = forms.IntegerField()
-    seat_number = forms.IntegerField(max_value=1)
+class BuyTicketForm(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = ['trip', 'seat_number']
+        widgets = {
+            'trip': forms.HiddenInput()
+}
     
