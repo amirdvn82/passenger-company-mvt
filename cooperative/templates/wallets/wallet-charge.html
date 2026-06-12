@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Charge Wallet</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="amount" class="form-label">Amount (Dollars)</label>
+            <input type="number" name="amount" id="amount" class="form-control" min="1000" step="1000" required>
+        </div>
+        <button type="submit" class="btn btn-success">Charge</button>
+        <a href="{% url 'wallets:wallet-dashboard' %}" class="btn btn-secondary">Back</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Transaction History</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount (Dollars)</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tx in transactions %}
+            <tr>
+                <td>{{ tx.created_date|date:"Y/m/d H:i" }}</td>
+                <td>{{ tx.get_transaction_type_display }}</td>
+                <td>{{ tx.amount|floatformat:0 }}</td>
+                <td>{{ tx.description|default:"-" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">No transactions found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

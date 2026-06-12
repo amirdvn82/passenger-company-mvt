@@ -10,6 +10,7 @@
     {% if user.is_authenticated %}
         <a href="{% url 'trips:trip-list' %}">Trips</a> |
         <a href="{% url 'tickets:my-tickets' %}">My Tickets</a> |
+        <a href="{% url 'wallets:wallet-dashboard' %}">Wallet</a> | 
 
         {% if user.role == 'DRIVER' or user.is_staff %}
             <a href="{% url 'trips:driver-dashboard' %}">Driver Dashboard</a> |

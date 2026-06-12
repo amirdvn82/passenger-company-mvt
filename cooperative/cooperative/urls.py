@@ -24,9 +24,11 @@ urlpatterns = [
     path('tickets/', include('tickets.urls', namespace='tickets')),
     path('trips/', include('trips.urls', namespace='trips')),
     path('', include('accounts.urls', namespace='accounts')),
+    path('wallet/', include('wallets.urls', namespace='wallets')),
     path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('password-change/', auth_views.PasswordChangeView.as_view(template_name='accounts/password-change.html'), name='password-change'),
     path('password-change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='accounts/password-change_done.html'), name='password-change-done'),
+
 
 ]
