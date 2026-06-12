@@ -2,7 +2,7 @@ from django.db import transaction, IntegrityError
 from wallets.services import WalletService, InsufficientBalanceError
 from .models import Ticket
 from trips.models import Trip
-
+from datetime import *
 
 class TicketPurchaseError(Exception):
     pass
@@ -28,6 +28,10 @@ class TicketService:
 
         if Ticket.objects.filter(user=user, trip=trip, status=Ticket.Status.ACTIVE,).exists():
             raise TicketPurchaseError("You already have a ticket for this trip")
+
+        if trip.departure_time <= timezone.now():
+            raise TicketPurchaseError('The time for departure has passed.')
+
 
         price = trip.price
 
