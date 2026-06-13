@@ -6,6 +6,7 @@ app_name = 'accounts'
 urlpatterns = [
 
     path("signup/", signup_view, name="signup"),
+    path('register/driver/', register_driver, name='register-driver'),
     
     
 

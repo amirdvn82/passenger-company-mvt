@@ -6,8 +6,10 @@
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-
     <button type="submit">Login</button>
 </form>
+
+<p>Don't have an account? <a href="{% url 'accounts:signup' %}">Register as User</a></p>
+<p>Want to become a driver? <a href="{% url 'accounts:register-driver' %}">Register as Driver</a></p>
 
 {% endblock %}
