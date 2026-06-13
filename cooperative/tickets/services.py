@@ -4,6 +4,10 @@ from .models import Ticket
 from trips.models import Trip
 from django.utils import timezone
 from django.contrib import messages
+from decimal import Decimal
+from django.utils import timezone
+from cities.models import SystemSetting
+
 
 
 class TicketPurchaseError(Exception):
@@ -54,21 +58,37 @@ class TicketService:
                 
                 raise TicketPurchaseError("Seat already reserved")
 
-       
+        
         return ticket
-
 
     @staticmethod
     @transaction.atomic
     def cancel_ticket(ticket_id, user): 
         try:
 
-            ticket = Ticket.objects.get(id=ticket_id, user=user, status='ACTIVE')
+            ticket = Ticket.objects.select_for_update().get(id=ticket_id, user=user, status='ACTIVE')
             
             ticket.status = 'CANCELLED'
             ticket.save()
             
 
-            return ticket
         except Ticket.DoesNotExist:
             raise Exception("The requested ticket could not be found or has already been canceled.")
+
+        if ticket.trip.departure_time <= timezone.now():
+            raise TicketPurchaseError("Cannot cancel ticket after departure time.")    
+
+        setting = SystemSetting.objects.first()
+        penalty_percent = (setting.refund_percentage if setting else Decimal("10"))
+        
+
+        price = Decimal(ticket.trip.price)
+        refund_amount = price * (Decimal("100") - penalty_percent) / Decimal("100")
+
+        if refund_amount > 0:
+            WalletService.refund(user=ticket.user, amount=refund_amount, description=f"Refund for cancelled ticket #{ticket.id} (penalty {penalty_percent}%)")
+
+        ticket.status = Ticket.Status.CANCELLED
+        ticket.save(update_fields=["status"])
+
+        return ticket

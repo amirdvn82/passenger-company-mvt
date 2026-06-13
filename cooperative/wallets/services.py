@@ -90,42 +90,6 @@ class WalletService:
     
     @staticmethod
     @transaction.atomic
-    def cancel_ticket(*, ticket_id: int, user):
-        from cities.models import SystemSetting  # برای دریافت درصد جریمه
-
-        try:
-            ticket = Ticket.objects.select_for_update().get(id=ticket_id)
-        except Ticket.DoesNotExist:
-            raise TicketPurchaseError("Ticket not found")
-
-        # بررسی دسترسی: فقط صاحب بلیط یا ادمین
-        if ticket.user != user and not user.is_staff:
-            raise TicketPurchaseError("You cannot cancel this ticket")
-
-        if ticket.status != Ticket.Status.ACTIVE:
-            raise TicketPurchaseError("Only active tickets can be cancelled")
-
-        if ticket.trip.departure_time <= timezone.now():
-            raise TicketPurchaseError("Cannot cancel ticket after departure time")
-
-        # درصد جریمه
-        setting = SystemSetting.objects.first()
-        refund_percent = setting.refund_percentage if setting else Decimal('10.0')
-        refund_amount = ticket.trip.price * (Decimal('100') - refund_percent) / Decimal('100')
-
-        # برگشت وجه
-        WalletService.refund(
-            user=ticket.user,
-            amount=refund_amount,
-            description=f"Refund for cancelled ticket #{ticket.id} (penalty {refund_percent}%)"
-        )
-    
-        # تغییر وضعیت بلیط
-        ticket.status = Ticket.Status.CANCELLED
-        ticket.save(update_fields=['status'])
-
-    @staticmethod
-    @transaction.atomic
     def mark_as_used(*, ticket_id: int, user):
         """Marks a ticket as used."""
         try:
