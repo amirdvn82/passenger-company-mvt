@@ -2,7 +2,9 @@ from django.db import transaction, IntegrityError
 from wallets.services import WalletService, InsufficientBalanceError
 from .models import Ticket
 from trips.models import Trip
-from datetime import *
+from django.utils import timezone
+from django.contrib import messages
+
 
 class TicketPurchaseError(Exception):
     pass
@@ -54,3 +56,19 @@ class TicketService:
 
        
         return ticket
+
+
+    @staticmethod
+    @transaction.atomic
+    def cancel_ticket(ticket_id, user): 
+        try:
+
+            ticket = Ticket.objects.get(id=ticket_id, user=user, status='ACTIVE')
+            
+            ticket.status = 'CANCELLED'
+            ticket.save()
+            
+
+            return ticket
+        except Ticket.DoesNotExist:
+            raise Exception("The requested ticket could not be found or has already been canceled.")

@@ -14,7 +14,10 @@ def buy_ticket_view(request, trip_id):
     trip = get_object_or_404(Trip, id=trip_id)
    
     if request.method == "POST":
-        form = BuyTicketForm(request.POST)
+        
+        data = request.POST.copy()
+        data['trip'] = trip.id
+        form = BuyTicketForm(data)
 
         if form.is_valid():
             #trip_id = form.cleaned_data["trip_id"]
@@ -27,10 +30,10 @@ def buy_ticket_view(request, trip_id):
                 return redirect("ticket-success")
 
             except TicketPurchaseError as e:
-                form.add_error(None, str(e))
+                form.add_error('seat_number', str(e))
 
     else:
-        form = BuyTicketForm(initial={"trip_id": trip_id})
+        form = BuyTicketForm(initial={"trip": trip.id})
 
     return render(request, "tickets/buy-ticket.html", {"form": form, "trip": trip})
 
