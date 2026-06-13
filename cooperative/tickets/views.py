@@ -27,7 +27,7 @@ def buy_ticket_view(request, trip_id):
 
             try:
                 TicketService.buy_ticket(user=request.user, trip=trip, seat_number=seat_number)
-                return redirect("ticket-success")
+                return redirect("tickets:ticket-success")
 
             except TicketPurchaseError as e:
                 form.add_error('seat_number', str(e))
