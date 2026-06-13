@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2> Travel passenger list: {{ trip.origin.name }} → {{ trip.destination.name }}</h2>
+    <p><strong> Departure time:</strong> {{ trip.departure_time|date:"Y/m/d H:i" }}</p>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Passenger's name</th>
+                <th>Seat Number </th>
+                <th>Ticket Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+            <tr>
+                <td>{{ ticket.user.get_full_name|default:ticket.user.username }}</td>
+                <td>{{ ticket.seat_number }}</td>
+                <td>{{ ticket.get_status_display }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3"> No passengers found for this trip.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'trips:driver-dashboard' %}" class="btn btn-secondary"> Return to Dashboard </a>
+</div>
+{% endblock %}
