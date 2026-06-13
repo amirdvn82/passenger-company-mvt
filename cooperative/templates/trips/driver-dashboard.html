@@ -1,43 +1,36 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block content %}
-
-<h2>My Trips</h2>
-
-{% for trip in trips %}
-
-<p>
-    {{ trip.origin }}
-    →
-    {{ trip.destination }}
-</p>
-
-<p>
-    Price: {{ trip.price }}
-</p>
-
-<p>
-    Capacity: {{ trip.capacity }}
-</p>
-
-<p>
-    Remaining: {{ trip.remaining_capacity }}
-</p>
-
-<p>
-    Sold Seats: {{ trip.sold_seats }}
-</p>
-
-<p>
-    Revenue: {{ trip.revenue }}
-</p>
-
-<hr>
-
-{% empty %}
-
-<p>No trips found.</p>
-
-{% endfor %}
-
+<div class="container mt-4">
+    <h2>Driver Dashboard</h2>
+    <h4>Total Earnings: {{ total_earnings|floatformat:0 }} Dollars</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Origin</th>
+                <th>Destination</th>
+                <th>Departure Time</th>
+                <th>Total Capacity</th>
+                <th>Passengers Count</th>
+                <th>Revenue (Dollars)</th>
+                <th>Passenger List</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trip in trips %}
+            <tr>
+                <td>{{ trip.origin.name }}</td>
+                <td>{{ trip.destination.name }}</td>
+                <td>{{ trip.departure_time|date:"Y/m/d H:i" }}</td>
+                <td>{{ trip.capacity }}</td>
+                <td>{{ trip.tickets_sold }}</td>
+                <td>{{ trip.revenue|floatformat:0 }}</td>
+                <td><a href="{% url 'trips:trip_passengers' trip.id %}">View</a></td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7">No trips found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
