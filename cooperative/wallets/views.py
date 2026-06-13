@@ -2,12 +2,12 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from decimal import Decimal
-from .models import WalletTransaction
+from .models import WalletTransaction, Wallet
 from .services import WalletService
 
 @login_required
 def wallet_dashboard(request):
-    wallet = request.user.wallet
+    wallet, created = Wallet.objects.get_or_create(user=request.user)
     return render(request, 'wallets/wallet-dashboard.html', {'wallet': wallet})
 
 @login_required
