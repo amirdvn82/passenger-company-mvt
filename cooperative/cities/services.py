@@ -1,7 +1,7 @@
 from .models import CityDistance
 
 
-PRICE_PER_KM = 50000  
+PRICE_PER_KM = 50  
 
 
 def calculate_trip_price(origin, destination):

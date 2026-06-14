@@ -1,6 +1,6 @@
 from django.db import models
 from accounts.models import DriverProfile, Vehicle
-from cities.models import City
+from cities.models import City, CityDistance
 from cities.services import calculate_trip_price, calculate_travel_time_minutes
 from django.apps import apps   
 from django.contrib.auth.models import Permission
@@ -45,15 +45,15 @@ class Trip(models.Model):
             raise ValueError("Trip capacity cannot exceed vehicle capacity")
 
         if self.origin_id and self.destination_id:
-            if self.origin_id == self.destination_id:
-                raise ValueError("Origin and destination cannot be the same")
-
-            if self.price is None:
-                self.price = calculate_trip_price(self.origin, self.destination)
-
-            if self.travel_time_minutes is None:
-                self.travel_time_minutes = calculate_travel_time_minutes(self.origin, self.destination)
-
+            try:
+                if not self.price:
+                    self.price = calculate_trip_price(self.origin, self.destination)
+                if not self.travel_time_minutes:
+                    self.travel_time_minutes = calculate_travel_time_minutes(self.origin, self.destination)
+            
+            except CityDistance.DoesNotExist:
+                raise ValueError(f"Distance between {self.origin.name} and {self.destination.name} is not defined. Please add it in admin panel.")
+    
         super().save(*args, **kwargs)
 
     

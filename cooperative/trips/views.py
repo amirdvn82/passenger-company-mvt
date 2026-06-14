@@ -5,9 +5,12 @@ from accounts.models import DriverProfile
 from django.contrib import messages
 from tickets.models import Ticket
 from django.db.models import Count, Q
+from .forms import TripCreateForm
+
+
 
 def trip_list_view(request):
-    trips = Trip.objects.all()
+    trips = Trip.objects.filter(status=Trip.Status.APPROVED)
     return render(request, "trips/trip-list.html", {"trips": trips})
 
 
@@ -51,6 +54,50 @@ def trip_passengers_view(request, trip_id):
     
     tickets = Ticket.objects.filter(trip=trip, status=Ticket.Status.ACTIVE).select_related('user')
     return render(request, 'trips/trip-passengers.html', {'trip': trip, 'tickets': tickets})
+
+
+@login_required
+def create_trip_view(request):
+
+    if not hasattr(request.user, "driver_profile"):
+        return render(request, "error.html", {"message": "You are not a driver."})
+
+    driver_profile = request.user.driver_profile
+
+    if not driver_profile.is_approved:
+        messages.error(request, "Your driver account is not approved.")
+        return redirect("trips:trip-list")
+
+    if request.method == "POST":
+
+        form = TripCreateForm(request.POST)
+
+        form.fields["vehicle"].queryset = (driver_profile.vehicles.all())
+
+        if form.is_valid():
+
+            trip = form.save(commit=False)
+
+            trip.driver = driver_profile
+
+            trip.status = Trip.Status.PENDING
+
+            trip.save()
+
+            messages.success(request, "Trip created successfully and waiting for admin approval.")
+
+            return redirect("trips:driver-dashboard")
+
+    else:
+
+        form = TripCreateForm()
+
+        form.fields["vehicle"].queryset = (driver_profile.vehicles.all())
+
+    return render(request, "trips/create-trip.html", {"form": form})
+
+
+
 
 def home_view(request):
     return render(request, "home.html")

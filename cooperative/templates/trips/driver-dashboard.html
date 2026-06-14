@@ -2,8 +2,17 @@
 
 {% block content %}
 <div class="container mt-4">
+
     <h2>Driver Dashboard</h2>
+
+    <a href="{% url 'trips:create-trip' %}" class="btn btn-primary">
+        Create New Trip
+    </a>
+
+    <br><br>
+
     <h4>Total Earnings: {{ total_earnings|floatformat:0 }} Dollars</h4>
+
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -25,12 +34,19 @@
                 <td>{{ item.trip.capacity }}</td>
                 <td>{{ item.tickets_sold }}</td>
                 <td>{{ item.revenue|floatformat:0 }}</td>
-                <td><a href="{% url 'trips:trip-passengers' item.trip.id %}">View</a></td>
+                <td>
+                    <a href="{% url 'trips:trip-passengers' item.trip.id %}">
+                        View
+                    </a>
+                </td>
             </tr>
             {% empty %}
-            <tr><td colspan="7">No trips found.</td></tr>
+            <tr>
+                <td colspan="7">No trips found.</td>
+            </tr>
             {% endfor %}
         </tbody>
     </table>
+
 </div>
 {% endblock %}

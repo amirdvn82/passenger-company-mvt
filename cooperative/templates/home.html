@@ -3,36 +3,29 @@
 {% block content %}
 <div class="container mt-5">
     {% if user.is_authenticated %}
-        
-       {% if user.role == 'DRIVER' %}
-            <!-- محتوایی که فقط راننده می‌بیند -->
-            <div class="jumbotron">
-                <h1 class="display-4">Welcome, Captain {{ user.username }}!</h1>
-                <p class="lead">You are logged in as a Driver. Here you can manage your assigned trips.</p>
-                <hr class="my-4">
-                <div class="list-group">
-                    <a href="{% url 'trips:driver-dashboard' %}" class="list-group-item list-group-item-action active">
-                        Go to My Driver Dashboard
-                    </a>
-                    <a href="{% url 'trips:trip-list' %}" class="list-group-item list-group-item-action">
-                        View All Scheduled Trips
-                    </a>
+        {% if user.role == 'DRIVER' %}
+            <div class="card bg-dark text-white p-5">
+                <h1>Driver Dashboard</h1>
+                <p>Welcome back, {{ user.username }}. You are logged in as a Driver.</p>
+                <hr class="bg-light">
+                <div class="d-grid gap-2 d-md-block">
+                    <a href="{% url 'trips:driver-dashboard' %}" class="btn btn-warning btn-lg">View My Trips</a>
                 </div>
             </div>
-
         {% else %}
-            <!-- محتوایی که فقط مسافران می‌بینند -->
-            <h1>Welcome, {{ user.username }}!</h1>
-            <p>Ready for your next journey? Book your ticket now.</p>
-            <a href="{% url 'trips:trip-list' %}" class="btn btn-primary">Search & Book Trips</a>
+            <div class="jumbotron p-5 bg-light border">
+                <h1>Welcome, {{ user.username }}!</h1>
+                <p class="lead">Ready for your next journey? Search for available trips and book your seat.</p>
+                <a href="{% url 'trips:trip-list' %}" class="btn btn-primary btn-lg">Search & Book Trips</a>
+            </div>
         {% endif %}
-
     {% else %}
-        <!-- محتوای عمومی برای کاربرانی که هنوز لاگین نکرده‌اند -->
-        <h1>Welcome to our Transport System</h1>
-        <p>Please login or sign up to use our services.</p>
-        <a href="{% url 'accounts:login' %}" class="btn btn-success">Login</a>
-        <a href="{% url 'accounts:signup' %}" class="btn btn-outline-primary">Sign Up</a>
+        <div class="text-center">
+            <h1>Welcome to Transport System</h1>
+            <p>Please login to manage your trips or book a ticket.</p>
+            <a href="{% url 'login' %}" class="btn btn-success">Login</a>
+            <a href="{% url 'accounts:signup' %}" class="btn btn-outline-primary">Sign Up</a>
+        </div>
     {% endif %}
 </div>
 {% endblock %}
