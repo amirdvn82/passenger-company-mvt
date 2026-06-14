@@ -45,3 +45,6 @@ def trip_passengers_view(request, trip_id):
     
     tickets = Ticket.objects.filter(trip=trip, status=Ticket.Status.ACTIVE).select_related('user')
     return render(request, 'trips/trip-passengers.html', {'trip': trip, 'tickets': tickets})
+
+def home_view(request):
+    return render(request, "home.html")

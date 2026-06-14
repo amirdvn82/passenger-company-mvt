@@ -29,8 +29,6 @@
     {% else %}
         <a href="{% url 'trips:trip-list' %}">Trips</a> |
         <a href="{% url 'login' %}">Login</a>
-        <p>Don't have an account? <a href="{% url 'accounts:signup' %}">Register as User</a></p> 
-        <p>Want to become a driver? <a href="{% url 'accounts:register-driver' %}">Register as Driver</a></p> 
 
 
     {% endif %}
