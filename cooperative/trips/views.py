@@ -17,7 +17,13 @@ def driver_dashboard_view(request):
         return render(request, 'error.html', {'message': 'You are not a driver.'})
 
     driver_profile = request.user.driver_profile
+    
+    if not driver_profile.is_approved:
 
+        messages.warning(request, "Your driver account is waiting for admin approval.")
+
+        return redirect('trips:trip-list')
+    
     trips = Trip.objects.filter(driver=driver_profile).annotate(tickets_sold=Count('tickets', filter=Q(tickets__status=Ticket.Status.ACTIVE))).order_by('-departure_time')
 
 

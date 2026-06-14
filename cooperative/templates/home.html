@@ -4,7 +4,7 @@
 <div class="container mt-5">
     {% if user.is_authenticated %}
         
-        {% if user.is_staff %}
+       {% if user.role == 'DRIVER' %}
             <!-- محتوایی که فقط راننده می‌بیند -->
             <div class="jumbotron">
                 <h1 class="display-4">Welcome, Captain {{ user.username }}!</h1>

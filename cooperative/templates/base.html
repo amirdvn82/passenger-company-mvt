@@ -1,21 +1,22 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Ticket System</title>
 </head>
+
 <body>
 
-<nav>
-    {% if user.is_authenticated %}
+    <nav>
+        {% if user.is_authenticated %}
 
         {% if user.role == 'USER' %}
-            <a href="{% url 'trips:trip-list' %}">Trips</a> |
-            <a href="{% url 'tickets:my-tickets' %}">My Tickets</a> |
-            <a href="{% url 'wallets:wallet-dashboard' %}">Wallet</a> | 
+        <a href="{% url 'trips:trip-list' %}">Trips</a> |
+        <a href="{% url 'tickets:my-tickets' %}">My Tickets</a> |
+        <a href="{% url 'wallets:wallet-dashboard' %}">Wallet</a> |
         {% endif %}
-        {% if user.role == 'DRIVER' or user.is_staff %}
-            <a href="{% url 'trips:driver-dashboard' %}">Driver Dashboard</a> |
+        {% if user.role == 'DRIVER' %}
+        <a href="{% url 'trips:driver-dashboard' %}">Driver Dashboard</a> |
         {% endif %}
 
         <a href="{% url 'password-change' %}">Change Password</a> |
@@ -26,19 +27,25 @@
         </form>
 
         <span> (Logged in as {{ user.username }})</span>
-    {% else %}
+        {% else %}
         <a href="{% url 'trips:trip-list' %}">Trips</a> |
         <a href="{% url 'login' %}">Login</a>
 
 
+        {% endif %}
+    </nav>
+
+    <hr>
+    {% if messages %}
+    {% for message in messages %}
+    <div style="padding:10px; margin:10px 0; border:1px solid #ccc;">
+        {{ message }}
+    </div>
+    {% endfor %}
     {% endif %}
-</nav>
-
-<hr>
-
-{% block content %}
-{% endblock %}
+    {% block content %}
+    {% endblock %}
 
 </body>
-</html>
 
+</html>
