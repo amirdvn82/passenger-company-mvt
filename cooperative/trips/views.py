@@ -20,12 +20,17 @@ def driver_dashboard_view(request):
 
     trips = Trip.objects.filter(driver=driver_profile).annotate(tickets_sold=Count('tickets', filter=Q(tickets__status=Ticket.Status.ACTIVE))).order_by('-departure_time')
 
+
+    trips_data=[]
     total_earnings = 0
     for trip in trips:
-        trip.revenue = trip.tickets_sold * trip.price
-        total_earnings += trip.revenue
+        
+        revenue = trip.tickets_sold * trip.price
+        total_earnings += revenue
+        
+        trips_data.append({'trip': trip, 'tickets_sold': trip.tickets_sold, 'revenue': revenue })
 
-    context = {'trips': trips, 'total_earnings': total_earnings,}
+    context = {'trips_data': trips_data, 'total_earnings': total_earnings,}
     return render(request, 'trips/driver-dashboard.html', context)
 
 

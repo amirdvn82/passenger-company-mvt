@@ -15,14 +15,16 @@
 
     <p>
         {% if trip.remaining_capacity > 0 %}
+        {% if user.role == 'USER' %}
         <span style="color: green;">Capacity: {{ trip.remaining_capacity }}</span><br><br>
         <a href="{% url 'tickets:buy-ticket' trip.id %}"
             style="padding: 8px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
             Buy Ticket
-        </a>
+        </a>{% endif %}
         {% else %}
         <span style="color: red; font-weight: bold;">Sold Out</span>
         {% endif %}
+        
     </p>
 </div>
 {% endfor %}

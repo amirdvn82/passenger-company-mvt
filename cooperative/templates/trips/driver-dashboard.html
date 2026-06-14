@@ -12,20 +12,20 @@
                 <th>Departure Time</th>
                 <th>Total Capacity</th>
                 <th>Passengers Count</th>
-                <th>Revenue (Dollars)</th>
+                <th>Revenue ($)</th>
                 <th>Passenger List</th>
             </tr>
         </thead>
         <tbody>
-            {% for trip in trips %}
+            {% for item in trips_data %}
             <tr>
-                <td>{{ trip.origin.name }}</td>
-                <td>{{ trip.destination.name }}</td>
-                <td>{{ trip.departure_time|date:"Y/m/d H:i" }}</td>
-                <td>{{ trip.capacity }}</td>
-                <td>{{ trip.tickets_sold }}</td>
-                <td>{{ trip.revenue|floatformat:0 }}</td>
-                <td><a href="{% url 'trips:trip_passengers' trip.id %}">View</a></td>
+                <td>{{ item.trip.origin.name }}</td>
+                <td>{{ item.trip.destination.name }}</td>
+                <td>{{ item.trip.departure_time|date:"Y/m/d H:i" }}</td>
+                <td>{{ item.trip.capacity }}</td>
+                <td>{{ item.tickets_sold }}</td>
+                <td>{{ item.revenue|floatformat:0 }}</td>
+                <td><a href="{% url 'trips:trip-passengers' item.trip.id %}">View</a></td>
             </tr>
             {% empty %}
             <tr><td colspan="7">No trips found.</td></tr>
