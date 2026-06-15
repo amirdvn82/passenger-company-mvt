@@ -33,7 +33,7 @@ def signup_view(request):
 def logout_view(request):
     logout(request)
    
-    return redirect('/')
+    return redirect('home')
 
 
 def register_driver(request):
@@ -58,6 +58,6 @@ class CustomLoginView(LoginView):
         user = self.request.user
         if user.role == 'DRIVER':
             if hasattr(user, 'driver_profile') and not user.driver_profile.is_approved:
-                return reverse('trips:waiting_approval') 
+                return reverse('trips:waiting-approval') 
             return reverse('trips:driver-dashboard')
         return reverse('home')

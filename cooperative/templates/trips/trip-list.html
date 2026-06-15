@@ -1,32 +1,18 @@
-{% extends 'base.html' %}
-
-{% block content %}
-<h2>Available Trips</h2>
-
 {% for trip in trips %}
 <div style="margin-bottom:20px; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
-    <p>
-        <strong>{{ trip.origin }}</strong> ==> <strong>{{ trip.destination }}</strong>
-    </p>
-
-    <p>
-        Price: {{ trip.price }}
-    </p>
-
+    <p><strong>{{ trip.origin }}</strong> ==> <strong>{{ trip.destination }}</strong></p>
+    <p>Price: {{ trip.price }} Dollars </p>
     <p>
         {% if trip.remaining_capacity > 0 %}
-        {% if user.role == 'USER' %}
-        <span style="color: green;">Capacity: {{ trip.remaining_capacity }}</span><br><br>
-        <a href="{% url 'tickets:buy-ticket' trip.id %}"
-            style="padding: 8px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
-            Buy Ticket
-        </a>{% endif %}
+            {% if user.role == 'USER' %}
+                <span style="color: green;">Remaining capacity: {{ trip.remaining_capacity }}</span><br><br>
+                <a href="{% url 'trips:trip-detail' trip.id %}" style="padding: 8px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+                    Details & Book
+                </a>
+            {% endif %}
         {% else %}
-        <span style="color: red; font-weight: bold;">Sold Out</span>
+            <span style="color: red; font-weight: bold;">Sold Out</span>
         {% endif %}
-        
     </p>
 </div>
 {% endfor %}
-
-{% endblock %}
