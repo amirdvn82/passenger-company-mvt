@@ -47,7 +47,7 @@
                             <h5 class="card-title">{{ trip.origin.name }} → {{ trip.destination.name }}</h5>
                             <p class="card-text">
                                 <strong>Date & Time:</strong> {{ trip.departure_time|date:"Y/m/d H:i" }}<br>
-                                <strong>Price:</strong> {{ trip.price|floatformat:0 }} Tomans<br>
+                                <strong>Price:</strong> {{ trip.price|floatformat:0 }} Dollars<br>
                                 <strong>Remaining Capacity:</strong> {{ trip.remaining_capacity }}<br>
                                 <strong>Driver:</strong> {{ trip.driver.user.get_full_name }}<br>
                                 <strong>Vehicle:</strong> {{ trip.vehicle.car_model }}

@@ -11,6 +11,9 @@ from django.utils import timezone
 
 
 def trip_list_view(request):
+    if request.user.is_authenticated and hasattr(request.user, 'driver_profile'):
+        if not request.user.driver_profile.is_approved:
+            return render(request, 'trips/waiting-approval.html')
     trips = Trip.objects.filter(status=Trip.Status.APPROVED)
     return render(request, "trips/trip-list.html", {"trips": trips})
 
@@ -101,6 +104,11 @@ def create_trip_view(request):
 
 
 def home_view(request):
+    if request.user.is_authenticated and hasattr(request.user, 'driver_profile'):
+        if not request.user.driver_profile.is_approved:
+            return render(request, 'trips/waiting-approval.html', {'message': 'Your driving account is awaiting admin review'})
+
+
     origin_id = request.GET.get('origin')
     destination_id = request.GET.get('destination')
     date_str = request.GET.get('date')

@@ -20,6 +20,7 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from trips.views import home_view
 from django.urls import reverse_lazy
+from accounts.views import CustomLoginView
 
 
 urlpatterns = [
@@ -29,10 +30,9 @@ urlpatterns = [
     path('trips/', include('trips.urls', namespace='trips')),
     path('accounts', include('accounts.urls', namespace='accounts')),
     path('wallet/', include('wallets.urls', namespace='wallets')),
-    path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
+    path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('password-change/', auth_views.PasswordChangeView.as_view(template_name='accounts/password-change.html', success_url=reverse_lazy('password-change-done')) , name='password-change'),
     path('password-change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='accounts/password-change-done.html'),  name='password-change-done'),
-
 
 ]
