@@ -56,8 +56,13 @@ class CustomLoginView(LoginView):
 
     def get_success_url(self):
         user = self.request.user
+
+        if user.is_staff or user.is_superuser:
+            return '/admin/'
+        
         if user.role == 'DRIVER':
             if hasattr(user, 'driver_profile') and not user.driver_profile.is_approved:
                 return reverse('trips:waiting-approval') 
             return reverse('trips:driver-dashboard')
         return reverse('home')
+    
