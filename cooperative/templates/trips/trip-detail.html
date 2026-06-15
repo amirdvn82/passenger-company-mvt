@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Trip Details</h2>
+    <p><strong>Origin:</strong> {{ trip.origin.name }}</p>
+    <p><strong>Destination:</strong> {{ trip.destination.name }}</p>
+    <p><strong>Departure Date & Time:</strong> {{ trip.departure_time|date:"Y/m/d H:i" }}</p>
+    <p><strong>Price:</strong> {{ trip.price|floatformat:0 }} Tomans</p>
+    <p><strong>Remaining Capacity:</strong> {{ trip.remaining_capacity }}</p>
+    <p><strong>Driver:</strong> {{ trip.driver.user.get_full_name }}</p>
+    <p><strong>Vehicle:</strong> {{ trip.vehicle.car_model }} ({{ trip.vehicle.plate_number }})</p>
+
+    <h3 class="mt-4">Buy Ticket</h3>
+
+    {% if user.is_authenticated %}
+        <form method="post" action="{% url 'tickets:buy-ticket' trip.id %}">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="seat_number" class="form-label">Seat Number (1 to {{ trip.capacity }})</label>
+                <input type="number" name="seat_number" id="seat_number" class="form-control" min="1" max="{{ trip.capacity }}" required>
+            </div>
+            <button type="submit" class="btn btn-success">Buy Ticket</button>
+            <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
+        </form>
+    {% else %}
+        <div class="alert alert-warning">
+            Please <a href="{% url 'login' %}?next={{ request.path }}">Login</a> to purchase a ticket.
+        </div>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
+    {% endif %}
+</div>
+{% endblock %}
