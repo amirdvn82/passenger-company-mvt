@@ -24,7 +24,7 @@ from django.urls import reverse_lazy
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('home/', home_view, name='home'),
+    path('', home_view, name='home'),
     path('tickets/', include('tickets.urls', namespace='tickets')),
     path('trips/', include('trips.urls', namespace='trips')),
     path('accounts', include('accounts.urls', namespace='accounts')),

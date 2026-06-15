@@ -1,31 +1,65 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-5">
-    {% if user.is_authenticated %}
-        {% if user.role == 'DRIVER' %}
-            <div class="card bg-dark text-white p-5">
-                <h1>Driver Dashboard</h1>
-                <p>Welcome back, {{ user.username }}. You are logged in as a Driver.</p>
-                <hr class="bg-light">
-                <div class="d-grid gap-2 d-md-block">
-                    <a href="{% url 'trips:driver-dashboard' %}" class="btn btn-warning btn-lg">View My Trips</a>
-                </div>
-            </div>
-        {% else %}
-            <div class="jumbotron p-5 bg-light border">
-                <h1>Welcome, {{ user.username }}!</h1>
-                <p class="lead">Ready for your next journey? Search for available trips and book your seat.</p>
-                <a href="{% url 'trips:trip-list' %}" class="btn btn-primary btn-lg">Search & Book Trips</a>
-            </div>
-        {% endif %}
-    {% else %}
-        <div class="text-center">
-            <h1>Welcome to Transport System</h1>
-            <p>Please login to manage your trips or book a ticket.</p>
-            <a href="{% url 'login' %}" class="btn btn-success">Login</a>
-            <a href="{% url 'accounts:signup' %}" class="btn btn-outline-primary">Sign Up</a>
+<div class="container mt-4">
+    <h2>Available Trips</h2>
+
+    <!-- Filter Form -->
+    <form method="get" class="row g-3 mb-4">
+        <div class="col-md-3">
+            <label for="origin" class="form-label">Origin</label>
+            <select name="origin" id="origin" class="form-select">
+                <option value="">All</option>
+                {% for city in cities %}
+                    <option value="{{ city.id }}" {% if selected_origin == city.id|stringformat:"s" %}selected{% endif %}>
+                        {{ city.name }}
+                    </option>
+                {% endfor %}
+            </select>
         </div>
+        <div class="col-md-3">
+            <label for="destination" class="form-label">Destination</label>
+            <select name="destination" id="destination" class="form-select">
+                <option value="">All</option>
+                {% for city in cities %}
+                    <option value="{{ city.id }}" {% if selected_destination == city.id|stringformat:"s" %}selected{% endif %}>
+                        {{ city.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label for="date" class="form-label">Departure Date</label>
+            <input type="date" name="date" id="date" class="form-control" value="{{ selected_date }}">
+        </div>
+        <div class="col-md-3 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </form>
+
+    <!-- Trip Results -->
+    {% if trips %}
+        <div class="row">
+            {% for trip in trips %}
+                <div class="col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ trip.origin.name }} → {{ trip.destination.name }}</h5>
+                            <p class="card-text">
+                                <strong>Date & Time:</strong> {{ trip.departure_time|date:"Y/m/d H:i" }}<br>
+                                <strong>Price:</strong> {{ trip.price|floatformat:0 }} Tomans<br>
+                                <strong>Remaining Capacity:</strong> {{ trip.remaining_capacity }}<br>
+                                <strong>Driver:</strong> {{ trip.driver.user.get_full_name }}<br>
+                                <strong>Vehicle:</strong> {{ trip.vehicle.car_model }}
+                            </p>
+                            <a href="{% url 'trips:trip-detail' trip.id %}" class="btn btn-sm btn-primary">Details & Book</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">No trips found.</div>
     {% endif %}
 </div>
 {% endblock %}

@@ -6,7 +6,8 @@ from django.contrib import messages
 from tickets.models import Ticket
 from django.db.models import Count, Q
 from .forms import TripCreateForm
-
+from cities.models import City
+from django.utils import timezone
 
 
 def trip_list_view(request):
@@ -100,4 +101,31 @@ def create_trip_view(request):
 
 
 def home_view(request):
-    return render(request, "home.html")
+    origin_id = request.GET.get('origin')
+    destination_id = request.GET.get('destination')
+    date_str = request.GET.get('date')
+    trips = Trip.objects.filter(status=Trip.Status.APPROVED, departure_time__date__gte=timezone.now().date()).select_related('origin', 'destination', 'driver__user', 'vehicle')
+    
+    if origin_id:
+        trips = trips.filter(origin_id=origin_id)
+    if destination_id:
+        trips = trips.filter(destination_id=destination_id)
+    if date_str:
+        trips = trips.filter(departure_time__date=date_str)
+    
+    cities = City.objects.all().order_by('name')
+
+    context = {
+        'trips': trips,
+        'cities': cities,
+        'selected_origin': origin_id,
+        'selected_destination': destination_id,
+        'selected_date': date_str,
+    }
+
+    return render(request, 'home.html', context)
+
+
+def tripـdetail_view(request, trip_id):
+    trip = get_object_or_404(Trip, id=trip_id)
+    return render(request, 'trips/trip-detail.html', {'trip': trip})
