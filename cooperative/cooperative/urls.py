@@ -17,10 +17,8 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-from django.contrib.auth import views as auth_views
 from trips.views import home_view
-from django.urls import reverse_lazy
-from accounts.views import CustomLoginView, logout_view
+
 
 
 urlpatterns = [
@@ -28,11 +26,7 @@ urlpatterns = [
     path('', home_view, name='home'),
     path('tickets/', include('tickets.urls', namespace='tickets')),
     path('trips/', include('trips.urls', namespace='trips')),
-    path('accounts', include('accounts.urls', namespace='accounts')),
+    path('accounts/', include('accounts.urls', namespace='accounts')),
     path('wallet/', include('wallets.urls', namespace='wallets')),
-    path('login/', CustomLoginView.as_view(), name='login'),
-    path('logout/', logout_view, name='logout'),
-    path('password-change/', auth_views.PasswordChangeView.as_view(template_name='accounts/password-change.html', success_url=reverse_lazy('password-change-done')) , name='password-change'),
-    path('password-change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='accounts/password-change-done.html'),  name='password-change-done'),
 
 ]

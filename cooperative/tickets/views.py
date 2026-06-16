@@ -20,10 +20,10 @@ def buy_ticket_view(request, trip_id):
         form = BuyTicketForm(data)
 
         if form.is_valid():
-            #trip_id = form.cleaned_data["trip_id"]
+            
             seat_number = form.cleaned_data["seat_number"]
 
-            #trip = Trip.objects.get(id=trip_id)
+            
 
             try:
                 TicketService.buy_ticket(user=request.user, trip=trip, seat_number=seat_number)
