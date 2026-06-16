@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Trip
 
-@admin.register(Trip)
+
 class TripAdmin(admin.ModelAdmin):
     list_display = ('id', 'origin', 'destination', 'departure_time', 'driver', 'status', 'price')
     list_filter = ('status', 'departure_time')
@@ -15,3 +15,5 @@ class TripAdmin(admin.ModelAdmin):
         updated = queryset.update(status=Trip.Status.REJECTED)
         self.message_user(request, f"{updated} The trip was rejected.")
     reject_trips.short_description = "Reject selected trips"
+
+admin.site.register(Trip, TripAdmin)

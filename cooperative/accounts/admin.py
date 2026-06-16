@@ -18,7 +18,7 @@ class CustomUserAdmin(User):
         self.message_user(request, 'Selected drivers confirmed.')
     approve_drivers.short_description = 'Confirm selected drivers'
 
-admin.site.register(User)
+admin.site.register(User, CustomUserAdmin)
 
 
 class DriverProfileAdmin(admin.ModelAdmin):
@@ -26,7 +26,7 @@ class DriverProfileAdmin(admin.ModelAdmin):
     list_filter = ('is_approved',)
     search_fields = ('user__username', 'national_code', 'license_number')
 
-admin.site.register(DriverProfile)
+admin.site.register(DriverProfile, DriverProfileAdmin)
 
 
 class VehicleAdmin(admin.ModelAdmin):
@@ -34,4 +34,4 @@ class VehicleAdmin(admin.ModelAdmin):
     list_filter = ('driver',)
     search_fields = ('plate_number', 'car_model')
 
-admin.site.register(Vehicle)
+admin.site.register(Vehicle, VehicleAdmin)

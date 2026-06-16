@@ -6,4 +6,4 @@ class TicketAdmin(admin.ModelAdmin):
     list_filter = ('status', 'created_date')
     search_fields = ('user__username', 'trip__origin__name', 'trip__destination__name')
 
-admin.site.register(Ticket)
+admin.site.register(Ticket, TicketAdmin)

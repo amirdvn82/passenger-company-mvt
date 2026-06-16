@@ -5,7 +5,7 @@ class CityAdmin(admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
 
-admin.site.register(City)
+admin.site.register(City, CityAdmin)
 
 
 class CityDistanceAdmin(admin.ModelAdmin):
@@ -13,7 +13,7 @@ class CityDistanceAdmin(admin.ModelAdmin):
     list_filter = ('origin', 'destination')
     search_fields = ('origin__name', 'destination__name')
 
-admin.site.register(CityDistance)
+admin.site.register(CityDistance, CityDistanceAdmin)
 
 
 class SystemSettingAdmin(admin.ModelAdmin):
@@ -28,4 +28,4 @@ class SystemSettingAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         return not SystemSetting.objects.exists()
 
-admin.site.register(SystemSetting)
+admin.site.register(SystemSetting, SystemSettingAdmin)
