@@ -19,9 +19,9 @@
         <a href="{% url 'trips:driver-dashboard' %}">Driver Dashboard</a> |
         {% endif %}
 
-        <a href="{% url 'password-change' %}">Change Password</a> |
+        <a href="{% url 'accounts:password-change' %}">Change Password</a> |
 
-        <form action="{% url 'logout' %}" method="post" style="display: inline;">
+        <form action="{% url 'accounts:logout' %}" method="post" style="display: inline;">
             {% csrf_token %}
             <button type="submit">Logout</button>
         </form>
@@ -29,7 +29,7 @@
         <span> (Logged in as {{ user.username }})</span>
         {% else %}
         <a href="{% url 'home' %}" class="btn btn-secondary mb-3">Home </a> |
-        <a href="{% url 'login' %}">Login </a> |
+        <a href="{% url 'accounts:login' %}">Login </a> |
         <a href="{% url 'accounts:signup' %}">Signup as User </a> |
         <a href="{% url 'accounts:register-driver' %}">Signup as Driver</a>
 
