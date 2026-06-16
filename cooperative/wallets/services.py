@@ -49,13 +49,13 @@ class WalletService:
 
         amount = Decimal(amount)
 
-        # ✅ اگر مبلغ صفر یا منفی بود هیچ کاری نکن
+        #  اگر مبلغ صفر یا منفی بود هیچ کاری نکن
         if amount <= 0:
             return
 
         wallet, _ = Wallet.objects.select_for_update().get_or_create(user=user)
 
-        # ✅ جلوگیری از منفی شدن موجودی
+        #  جلوگیری از منفی شدن موجودی
         if wallet.balance < amount:
             raise InsufficientBalanceError("Insufficient balance")
 
@@ -75,11 +75,17 @@ class WalletService:
     @staticmethod
     @transaction.atomic
     def refund(user, amount: Decimal, description: str = ""):
+        
         if amount <= 0:
             raise TicketPurchaseError("Refund amount must be positive")
+        
         wallet, _ = Wallet.objects.select_for_update().get_or_create(user=user)
-        wallet.balance += amount
+        
+        wallet.balance = F("balance") +  amount
         wallet.save(update_fields=["balance"])
+        wallet.refresh_from_db()
+        
+        
         WalletTransaction.objects.create(
             wallet=wallet,
             amount=amount,
