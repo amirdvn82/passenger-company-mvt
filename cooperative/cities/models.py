@@ -27,6 +27,21 @@ class CityDistance(models.Model):
         return f"{self.origin} → {self.destination}"
 
 class SystemSetting(models.Model):
+
+    price_per_km = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0.0,
+        help_text="Price per kilometer"
+    )
+    time_per_km = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0.0,
+        help_text="Estimated time per kilometer (minutes)"
+    )
+
+
     refund_percentage = models.DecimalField(
         max_digits=5, 
         decimal_places=2, 
@@ -39,7 +54,7 @@ class SystemSetting(models.Model):
         verbose_name_plural = "System Settings"
 
     def __str__(self):
-        return f"Penalty settings:{self.refund_percentage}%"
+        return f"Settings: Price={self.price_per_km}, Time={self.time_per_km}, Penalty={self.refund_percentage}%"
 
     def save(self, *args, **kwargs):
         
