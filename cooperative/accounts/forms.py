@@ -10,7 +10,7 @@ class SignUpForm(UserCreationForm):
 
         model = User
 
-        fields = ( 'username', 'phone_number', 'password1', 'password2',)
+        fields = ( 'first_name', 'last_name', 'username', 'phone_number', 'password1', 'password2',)
 
 class DriverRegistrationForm(UserCreationForm):
     national_code = forms.CharField(max_length=10, required=True, label= 'National Code' )
