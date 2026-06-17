@@ -73,7 +73,7 @@ class TicketService:
             
 
         except Ticket.DoesNotExist:
-            raise Exception("The requested ticket could not be found or has already been canceled.")
+            raise TicketPurchaseError("The requested ticket could not be found or has already been canceled.")
 
         if ticket.trip.departure_time <= timezone.now():
             raise TicketPurchaseError("Cannot cancel ticket after departure time.")    
