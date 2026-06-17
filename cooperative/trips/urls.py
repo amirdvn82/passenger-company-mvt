@@ -8,6 +8,6 @@ urlpatterns = [
         path("driver-dashboard/", driver_dashboard_view, name="driver-dashboard"),
         path("trip/<int:trip_id>/passengers/", trip_passengers_view, name="trip-passengers"),
         path("create/", create_trip_view, name="create-trip"),
-        path('<int:trip_id>/', tripـdetail_view, name='trip-detail'),
+        path('<int:trip_id>/', trip_detail_view, name='trip-detail'),
         path('waiting-approval/', waiting_approval_view, name='waiting-approval'),
 ]

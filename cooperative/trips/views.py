@@ -134,9 +134,10 @@ def home_view(request):
     return render(request, 'home.html', context)
 
 
-def tripـdetail_view(request, trip_id):
+def trip_detail_view(request, trip_id):
     trip = get_object_or_404(Trip, id=trip_id)
     return render(request, 'trips/trip-detail.html', {'trip': trip})
 
 def waiting_approval_view(request):
     return render(request, 'trips/waiting-approval.html', {'message': 'Your driving account is awaiting admin review'})
+
