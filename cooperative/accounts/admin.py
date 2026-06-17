@@ -2,8 +2,14 @@ from django.contrib import admin
 
 from .models import User, DriverProfile, Vehicle
 
-class CustomUserAdmin(User):
-    inlines = [DriverProfile]
+class DriverProfileInline(admin.StackedInline):   
+    model = DriverProfile
+    can_delete = False
+    verbose_name_plural = 'Driver Profile'
+
+
+class CustomUserAdmin(admin.ModelAdmin):
+    inlines = [DriverProfileInline]
     list_display = ('username', 'phone_number', 'first_name', 'last_name', 'role', 'is_verified', 'is_active')
     list_filter = ('role', 'is_verified', 'is_active')
     search_fields = ('username', 'phone_number', 'first_name', 'last_name')
