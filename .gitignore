@@ -180,3 +180,7 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 cooperative/tickets/exceptions.py
+
+.DS_Store
+aws/
+media/
